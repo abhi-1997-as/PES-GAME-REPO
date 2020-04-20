@@ -1,1 +1,31 @@
+// Code was based on code found in: https://processing.org/discourse/beta/num_1257609804.html
+// Using Processing 
+PFont font;
+int num = 0;
 
+void setup(){
+ size(500,500);
+ font = createFont("Arial",22);
+ textFont(font);
+}
+
+void draw(){
+ background(255,105,50);
+ println(num);
+
+ fill(0);
+ 
+ //Depending on the input it changes what is drawn in the GUI
+ if(num==1) text("Left",100,180);
+ else if(num==2) text("Right",100,180);
+ else if(num==3) text("Up",100,180);
+ else if(num==4) text("Down",100,180);
+ else if(num==5) text("Sound",100,180);
+
+
+}
+
+void keyPressed(){ //User input. Change this from numerical value to input from arduino
+  int keyNum = Character.getNumericValue(key);
+  if(keyNum<=5 && keyNum>0)num = keyNum;
+}
