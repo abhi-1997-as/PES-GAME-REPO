@@ -1,5 +1,6 @@
 // Code was based on code found in: https://processing.org/discourse/beta/num_1257609804.html
 // Using Processing 
+
 PFont font;
 int num = 0;
 
@@ -12,15 +13,25 @@ void setup(){
 void draw(){
  background(255,105,50);
  println(num);
-
+  
+  
+  
  fill(0);
  
- //Depending on the input it changes what is drawn in the GUI
  if(num==1) text("Left",100,180);
  else if(num==2) text("Right",100,180);
  else if(num==3) text("Up",100,180);
  else if(num==4) text("Down",100,180);
  else if(num==5) text("Sound",100,180);
+ 
+ int obj = randomNumber();
+ 
+ fill(100,200,50);
+ if(obj==0 || obj ==1) rect(0,0,100,500);//enemy on left
+ else if(obj==2 || obj ==3) rect(400,0,100,500);//enemy on right
+ else if(obj==4 || obj ==5) rect(0,0,500,225);//enemy on top
+ else if(obj==6 || obj ==7) rect(0,400,500,100);//enemy below
+ else if(obj==8 || obj ==9) square(225,225,50); //enemy in front. Make noise
 
 
 }
@@ -28,4 +39,10 @@ void draw(){
 void keyPressed(){ //User input. Change this from numerical value to input from arduino
   int keyNum = Character.getNumericValue(key);
   if(keyNum<=5 && keyNum>0)num = keyNum;
+}
+
+int randomNumber(){
+   delay(1000);
+   int rdm = int(random(0,10));
+   return rdm;
 }
