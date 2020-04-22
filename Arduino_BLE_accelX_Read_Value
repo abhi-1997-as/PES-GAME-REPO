@@ -1,29 +1,22 @@
 #include <ArduinoBLE.h>
 #include <Arduino_LSM9DS1.h>
-
-
 //----------------------------------------------------------------------------------------------------------------------
 // BLE UUIDs
 //----------------------------------------------------------------------------------------------------------------------
-
 #define BLE_UUID_TEST_SERVICE               "9A48ECBA-2E92-082F-C079-9E75AAE428B1"
 #define BLE_UUID_ACCELERATION               "2713"
 #define BLE_UUID_COUNTER                    "1A3AC130-31EE-758A-BC50-54A61958EF81"
 #define BLE_UUID_RESET_COUNTER              "FE4E19FF-B132-0099-5E94-3FFB2CF07940"
-
 //----------------------------------------------------------------------------------------------------------------------
 // BLE
 //----------------------------------------------------------------------------------------------------------------------
-
 BLEService testService( BLE_UUID_TEST_SERVICE );
 BLEFloatCharacteristic accelerationCharacteristic( BLE_UUID_ACCELERATION, BLERead | BLENotify );
 BLEUnsignedLongCharacteristic counterCharacteristic( BLE_UUID_COUNTER, BLERead | BLENotify );
 BLEBoolCharacteristic resetCounterCharacteristic( BLE_UUID_RESET_COUNTER, BLEWriteWithoutResponse );
 
-
 const int BLE_LED_PIN = LED_BUILTIN;
 const int RSSI_LED_PIN = LED_PWR;
-
 
 void setup()
 {
