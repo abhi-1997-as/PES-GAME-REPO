@@ -1,3 +1,6 @@
+//The sensor values are read on mobile via Bluetooth using the android APK - BLE Scanner.
+
+
 #include <ArduinoBLE.h>
 #include <Arduino_LSM9DS1.h>
 
