@@ -1,20 +1,28 @@
 // Code was based on code found in: https://processing.org/discourse/beta/num_1257609804.html
 // Using Processing 
+import processing.serial.*; //import the processing serial library
 
-PFont font;
+//GLOBAL VARIABLES
+
 int num = 0;
+int startTime;
+int enemy = 0;
+
+Serial port;
+String info; //used to read the information recieved 
+
+//CONSTANTS
+final int DELAY_TIME = 2000; //2000ms = 2s
 
 void setup(){
- size(500,500);
- font = createFont("Arial",22);
- textFont(font);
+ size(500,500);//Size of the GUI
+ startTime = millis();
+ 
+ port = new Serial(this, "Name_Of_Port",38400);//Name_Of Port needs to change depending on the bluetooth port it connects to
 }
 
 void draw(){
  background(255,105,50);
- println(num);
-  
-  
   
  fill(0);
  
@@ -24,14 +32,17 @@ void draw(){
  else if(num==4) text("Down",100,180);
  else if(num==5) text("Sound",100,180);
  
- int obj = randomNumber();
+ if(secondDelay()){
+   enemy = randomNumber();
+   startTime = millis();
+ }
  
  fill(100,200,50);
- if(obj==0 || obj ==1) rect(0,0,100,500);//enemy on left
- else if(obj==2 || obj ==3) rect(400,0,100,500);//enemy on right
- else if(obj==4 || obj ==5) rect(0,0,500,225);//enemy on top
- else if(obj==6 || obj ==7) rect(0,400,500,100);//enemy below
- else if(obj==8 || obj ==9) square(225,225,50); //enemy in front. Make noise
+ if(enemy==0 || enemy ==1) rect(0,0,100,500);//enemy on left
+ else if(enemy==2 || enemy ==3) rect(400,0,100,500);//enemy on right
+ else if(enemy==4 || enemy ==5) rect(0,0,500,100);//enemy on top
+ else if(enemy==6 || enemy ==7) rect(0,400,500,100);//enemy below
+ else if(enemy==8 || enemy ==9) square(225,225,50); //enemy in front. Make noise
 
 
 }
@@ -41,8 +52,10 @@ void keyPressed(){ //User input. Change this from numerical value to input from 
   if(keyNum<=5 && keyNum>0)num = keyNum;
 }
 
-int randomNumber(){
-   delay(1000);
-   int rdm = int(random(0,10));
-   return rdm;
+int randomNumber(){ //Generate a random integer between 0-10
+   return int(random(0,10));
+}
+
+boolean secondDelay(){ //Create a timer, so delay() is not used as that delays the whole system
+  return millis() - startTime >= DELAY_TIME;
 }
