@@ -18,11 +18,20 @@ void setup(){
  size(500,500);//Size of the GUI
  startTime = millis();
  
- port = new Serial(this, "Name_Of_Port",38400);//Name_Of Port needs to change depending on the bluetooth port it connects to
+ String portName = Serial.list()[0];//Need to change this depending on port name
+ port = new Serial(this, portName,9600);
 }
 
 void draw(){
  background(255,105,50);
+ 
+//CODE TO RECIEVE INFORMATION FROM ARDUINO
+ if ( port.available() > 0) 
+  {  // If data is available,
+  info = port.readStringUntil('\n');         
+  } 
+  println(info);
+//
   
  fill(0);
  
