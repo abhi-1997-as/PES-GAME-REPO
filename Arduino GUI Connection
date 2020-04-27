@@ -1,0 +1,14 @@
+// code inspired from: https://www.youtube.com/watch?time_continue=137&v=VGJCj0Hr1vQ&feature=emb_logo
+// https://learn.sparkfun.com/tutorials/connecting-arduino-to-processing/all
+
+void setup() {
+  serial.begin(9600); //9600 baud
+
+}
+
+void loop() {
+  //send 'Hello, world!' over the serial port
+  Serial.println("Hello, world!");
+
+  delay(100);//test delay
+}
