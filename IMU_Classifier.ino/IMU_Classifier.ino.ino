@@ -1,5 +1,6 @@
 #include <ArduinoBLE.h>
 #include <Arduino_LSM9DS1.h>
+#include <string.h>
 
 #include <TensorFlowLite.h>
 #include <tensorflow/lite/experimental/micro/kernels/all_ops_resolver.h>
