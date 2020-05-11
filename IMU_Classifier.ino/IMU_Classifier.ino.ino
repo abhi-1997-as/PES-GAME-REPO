@@ -12,13 +12,12 @@
 #define BLE_UUID_TEST_SERVICE               "19B10010-E8F2-537E-4F6C-D104768A1214"
 
 BLEService testService( BLE_UUID_TEST_SERVICE );
-BLEByteCharacteristic Gesture1Char("082fba41-095d-48c6-a355-cb6b7d5c7383", BLERead | BLENotify);
-BLEByteCharacteristic Gesture2Char("e70bfa27-c460-48b3-b86e-71ab62193cfc", BLERead | BLENotify);
-BLEByteCharacteristic Gesture3Char("a0e44fd2-45e9-4092-acf6-c0dd0f72e39c", BLERead | BLENotify);
-BLEByteCharacteristic Gesture4Char("d5dc74de-5d1f-403d-b675-5b60829e57ab", BLERead | BLENotify);
+BLEIntCharacteristic Gesture1Char("19B10011-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
+BLEIntCharacteristic Gesture2Char("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
+BLEIntCharacteristic Gesture3Char("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
+BLEIntCharacteristic Gesture4Char("19B10000-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
 
 const int BLE_LED_PIN = LED_BUILTIN;
-const int RSSI_LED_PIN = LED_PWR;
 
 const float accelerationThreshold = 2.5; // threshold of significant in G's
 const int numSamples = 119;
@@ -53,17 +52,16 @@ const char* GESTURES[] = {
 
 #define NUM_GESTURES (sizeof(GESTURES) / sizeof(GESTURES[0]))
 
-boolean left=0;
-boolean right=0;
-boolean jump=0;
-boolean duck=0;
+int left=0;
+int right=0;
+int jump=0;
+int duck=0;
 void setup() {
   Serial.begin(9600);
   while (!Serial);
   
   pinMode( BLE_LED_PIN, OUTPUT );
-  pinMode( RSSI_LED_PIN, OUTPUT );
-  
+ 
   // initialize the IMU
   if (!IMU.begin()) {
     Serial.println("Failed to initialize IMU!");
@@ -108,8 +106,8 @@ void loop() {
 
 // poll for BLE events
   BLE.poll();
-   // wait for significant motion
-  while (samplesRead == numSamples) {
+  
+   if(samplesRead == numSamples) {
     if (IMU.accelerationAvailable()) {
       // read the acceleration data
       IMU.readAcceleration(aX, aY, aZ);
@@ -121,14 +119,15 @@ void loop() {
       if (aSum >= accelerationThreshold) {
         // reset the sample read count
         samplesRead = 0;
-        break;
+        
       }
     }
-  }
+ }
+   
 
   // check if the all the required samples have been read since
   // the last time the significant motion was detected
-  while (samplesRead < numSamples) {
+  if (samplesRead < numSamples) {
     // check if new acceleration AND gyroscope data is available
     if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable()) {
       // read the acceleration and gyroscope data
@@ -144,8 +143,8 @@ void loop() {
       tflInputTensor->data.f[samplesRead * 6 + 4] = (gY + 2000.0) / 4000.0;
       tflInputTensor->data.f[samplesRead * 6 + 5] = (gZ + 2000.0) / 4000.0;
 
+   samplesRead++;
 
-      samplesRead++;
 
       if (samplesRead == numSamples) {
         // Run inferencing
@@ -157,34 +156,37 @@ void loop() {
         }
 
         // Loop through the output tensor values from the model
-        for (int i = 0; i < NUM_GESTURES; i++) {
-          Serial.print(GESTURES[i]);
-          Serial.print(": ");
-          Serial.println(tflOutputTensor->data.f[i], 6);
+          for (int i = 0; i < NUM_GESTURES; i++) 
+              {
+                  Serial.print(GESTURES[i]);
+                  Serial.print(": ");
+                  Serial.println(tflOutputTensor->data.f[i], 6);
                     
-        }
-        if(tflOutputTensor->data.f[0] >0.5)
-        {     left=1;
-              Gesture1Char.writeValue(left);
-          }
+               }
+           if(tflOutputTensor->data.f[0] >0.5)
+               {         
+                  left=1;
+                  Gesture1Char.writeValue(left);
+               }
            if(tflOutputTensor->data.f[1] >0.5)
-        {     right=1;
-              Gesture2Char.writeValue(right);
-          }
+               { 
+                  right=1;
+                  Gesture2Char.writeValue(right);
+               }
            if(tflOutputTensor->data.f[2] >0.5)
-        {
-              jump=1;
-              Gesture3Char.writeValue(jump);
-          }
+               {
+                  jump=1;
+                  Gesture3Char.writeValue(jump);
+               }
            if(tflOutputTensor->data.f[3] >0.5)
-        {     
-              duck=1;
-              Gesture4Char.writeValue(duck);
-          }
+               {     
+                  duck=1;
+                  Gesture4Char.writeValue(duck);
+               }
         Serial.println();
       }
     }
-  }
+  }   
 }
 
 bool setupBleMode()
