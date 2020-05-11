@@ -1,9 +1,9 @@
 const serviceUuid = "19b10010-e8f2-537e-4f6c-d104768a1214";
 const characteristicsUUID = {
-  gesture_l:"082fba41-095d-48c6-a355-cb6b7d5c7383",
-  gesture_r:"e70bfa27-c460-48b3-b86e-71ab62193cfc",
-  gesture_j:"a0e44fd2-45e9-4092-acf6-c0dd0f72e39c",
-  gesture_d:"d5dc74de-5d1f-403d-b675-5b60829e57ab"
+  gesture_l:"19b10011-e8f2-537e-4f6c-d104768a1214",
+  gesture_r:"19b10012-e8f2-537e-4f6c-d104768a1214",
+  gesture_j:"19b10001-e8f2-537e-4f6c-d104768a1214",
+  gesture_d:"19b10000-e8f2-537e-4f6c-d104768a1214"
 }
 let Gesture1Char;
 let Gesture2Char;
@@ -83,16 +83,20 @@ function gotCharacteristics(error, characteristics) {
 function left_color(data) {
   console.log('left: ', data);
   left = Number(data);
+  myBLE.read(Gesture1Char,left_color );
 }
 function right_color(data) {
   console.log('right: ', data);
   right = Number(data);
+   myBLE.read(Gesture2Char,right_color );
 }
 function jump_color(data) {
   console.log('jump: ', data);
   jump = Number(data);
+   myBLE.read(Gesture3Char,jump_color );
 }
 function duck_color(data) {
   console.log('duck: ', data);
   duck = Number(data);
+   myBLE.read(Gesture4Char,duck_color );
 }
